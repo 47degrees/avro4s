@@ -1,5 +1,4 @@
 resolvers += Classpaths.sbtPluginReleases
 
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0")
-
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.3")
+addSbtPlugin("com.alejandrohdezma" % "sbt-github" % "0.8.1")

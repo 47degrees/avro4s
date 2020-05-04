@@ -3,6 +3,9 @@
 // The root project is implicit, so we don't have to define it.
 // We do need to prevent publishing for it, though:
 
+addCommandAlias("ci-test",  "+test")
+addCommandAlias("ci-docs", "+compile")
+
 lazy val root = Project("avro4s", file("."))
   .settings(
     publish := {},

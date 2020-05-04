@@ -1,4 +1,3 @@
-import com.typesafe.sbt.SbtPgp
 import sbt.Keys._
 import sbt._
 
@@ -6,15 +5,14 @@ import sbt._
 object Build extends AutoPlugin {
 
   object autoImport {
-    val org = "com.sksamuel.avro4s"
     val AvroVersion = "1.9.2"
     val Log4jVersion = "1.2.17"
     val ScalatestVersion = "3.1.1"
     val Slf4jVersion = "1.7.30"
     val Json4sVersion = "3.6.7"
-    val CatsVersion = "2.0.0-RC2"
+    val CatsVersion = "2.1.1"
     val ShapelessVersion = "2.3.3"
-    val RefinedVersion = "0.9.13"
+    val RefinedVersion = "0.9.14"
     val MagnoliaVersion = "0.14.5"
     val ScalaMeterVersion = "0.19"
   }
@@ -25,10 +23,10 @@ object Build extends AutoPlugin {
   def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER")
 
   override def trigger = allRequirements
-  override def projectSettings = publishingSettings ++ Seq(
-    organization := org,
-    scalaVersion := "2.12.10",
-    crossScalaVersions := Seq("2.12.10", "2.13.1"),
+  override def projectSettings = Seq(
+    organization := "com.47deg",
+    scalaVersion := "2.12.11",
+    crossScalaVersions := Seq("2.12.11", "2.13.2"),
     resolvers += Resolver.mavenLocal,
     parallelExecution in Test := false,
     scalacOptions := Seq(
@@ -53,54 +51,4 @@ object Build extends AutoPlugin {
     )
   )
 
-  val publishingSettings = Seq(
-    publishMavenStyle := true,
-    publishArtifact in Test := false,
-    SbtPgp.autoImport.useGpg := true,
-    SbtPgp.autoImport.useGpgAgent := true,
-    if (isTravis) {
-      credentials += Credentials(
-        "Sonatype Nexus Repository Manager",
-        "oss.sonatype.org",
-        sys.env.getOrElse("OSSRH_USERNAME", ""),
-        sys.env.getOrElse("OSSRH_PASSWORD", "")
-      )
-    } else {
-      credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
-    },
-    if (isTravis) {
-      version := s"3.1.0.$travisBuildNumber-SNAPSHOT"
-    } else {
-      version := "3.0.9"
-    },
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isTravis) {
-        Some("snapshots" at s"${nexus}content/repositories/snapshots")
-      } else {
-        Some("releases" at s"${nexus}service/local/staging/deploy/maven2")
-      }
-    },
-    pomExtra := {
-      <url>https://github.com/sksamuel/avro4s</url>
-        <licenses>
-          <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-          </license>
-        </licenses>
-        <scm>
-          <url>git@github.com:sksamuel/avro4s.git</url>
-          <connection>scm:git@github.com:sksamuel/avro4s.git</connection>
-        </scm>
-        <developers>
-          <developer>
-            <id>sksamuel</id>
-            <name>sksamuel</name>
-            <url>http://github.com/sksamuel</url>
-          </developer>
-        </developers>
-    }
-  )
 }
